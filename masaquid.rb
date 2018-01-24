@@ -1,7 +1,7 @@
 # initialize
-UNIT = 'coins' # BTC/yen/USD
+UNIT = 'BTC' # BTC/yen/USD
 BET = 3
-GOAL = 100
+GOAL = 20
 HANDLIST = {
   1 => 'Rock',
   2 => 'Paper',
@@ -10,7 +10,7 @@ HANDLIST = {
 GOOD = [
   'Good boy.',
   'Sounds Good!',
-  'That’s cool.',
+  'Cool.',
   'How wonderful!',
 ]
 DUMMY_NAME = 'john'
@@ -162,7 +162,7 @@ while true
       sleep(1)
       puts
       puts '_/_/_/_/_/_/_/_/_/_/'
-      puts 'You die.'
+      puts "You die. (You dont have enough #{UNIT})"
       puts
       exit
     end
