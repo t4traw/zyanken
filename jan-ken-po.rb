@@ -1,120 +1,188 @@
-# 0: グー   : rock
-# 1: パー   : paper
-# 2: チョキ : scissors
-#
-# Memo: 
-# Jan-ken-po!
-# Ai-kono-sho!
-WALLET = 0   # 初期コイン
-GOAL   = 100 # 目標コイン
-INVEST = 3   # 投入コイン
+# initialize
+UNIT = 'coins' # BTC/yen/USD
+BET = 3
+GOAL = 100
+HANDLIST = {
+  1 => 'Rock',
+  2 => 'Paper',
+  3 => 'Scissors'
+}
+GOOD = [
+  'Good boy.',
+  'Sounds Good!',
+  'That’s cool.',
+  'How wonderful!',
+]
+DUMMY_NAME = 'john'
 
-def lame
-  puts 'Lame...Lame...Lame...'
-  exit
+$wallet = 10
+$player_name = ''
+
+def is_bool(v)
+  !!v === v
 end
 
-def get_my_hand(s)
-  case s
-    when /^1/, /^rock/
-      puts 'Your hand: Rock' 
-      return 1
-    when /^2/, /^paper/
-      puts 'Your hand: Paper' 
-      return 2
-    when /^3/, /^scissors/
-      puts 'Your hand: Scissors' 
-      return 3
-    else
-      return 0
+def getter(param)
+  case param
+    when :money
+      return "#{$wallet} #{UNIT}"
+    when :goal
+      return "#{GOAL} #{UNIT}"
+    when :to_goal
+      return "#{GOAL - $wallet} #{UNIT}"
+    when :bet
+      return "#{BET} #{UNIT}"
+    when :good
+      return GOOD[Random.new.rand(GOOD.length)]
   end
 end
 
-def get_enemy_hand
-  r = Random.new.rand(1..3)
-  case r
-    when /^1/, /^rock/
-      puts 'Enemy hand: Rock' 
-      return 1
-    when /^2/, /^paper/
-      puts 'Enemy hand: Paper' 
-      return 2
-    when /^3/, /^scissors/
-      puts 'Enemy hand: Scissors' 
-      return 3
-    else
-      return 0
-  end
-end
-
-def jan_ken_po(msg)
+def get_hand
   while true
-    puts msg
-    sleep(1)
     puts '1:rock 2:paper 3:scissors [1|2|3]:'
-    
-    hand = get_my_hand(gets)
-    if hand.zero?
-      puts 'Please select [1|2|3]'
-    else
-      return hand
+
+    case gets
+      when /^1/, /^rock/
+        puts 'Player hand: Rock' 
+        return 1
+      when /^2/, /^paper/
+        puts 'Player hand: Paper' 
+        return 2
+      when /^3/, /^scissors/
+        puts 'Player hand: Scissors' 
+        return 3
+      else
+        puts 'Please select [1|2|3]...'
     end
   end
 end
 
-def ai_kono_sho(msg)
+def duel
+  sleep(1)
+  puts
+  puts '_/_/_/_/_/_/_/_/_/_/'
+  puts 'Jan-ken-po!'
+
+  won = nil
+
   while true
-    puts msg
-    sleep(1)
-    puts '1:rock 2:paper 3:scissors [1|2|3]:'
+    player_hand = get_hand
+    enemy_hand = Random.new.rand(1..3)
+    hands = HANDLIST.invert
+
+    puts 'Enemy hand: ' + HANDLIST[enemy_hand]
     
-    hand = get_my_hand(gets)
-    if hand.zero?
-      puts 'Please select [1|2|3]'
-    else
-      return hand
+    if player_hand == enemy_hand
+      sleep(1)
+      puts
+      puts '_/_/_/_/_/_/_/_/_/_/'
+      puts 'Ai-kono-sho!'
+    
+    elsif player_hand == hands['Rock']     && enemy_hand == hands['Scissors'] then won = true
+    elsif player_hand == hands['Paper']    && enemy_hand == hands['Rock']     then won = true
+    elsif player_hand == hands['Scissors'] && enemy_hand == hands['Paper']    then won = true
+
+    elsif player_hand == hands['Rock']     && enemy_hand == hands['Paper']    then won = false
+    elsif player_hand == hands['Paper']    && enemy_hand == hands['Scissors'] then won = false
+    elsif player_hand == hands['Scissors'] && enemy_hand == hands['Rock']     then won = false
+    end
+    
+    unless won.nil?
+      sleep(1)
+      break
     end
   end
+  
+  return won
 end
-
-
-puts 'Let the games begin... [y|n]:'
-message = 
 
 while true
+  puts 'Enter player name: '
   
+  name = gets.strip
+  unless name.empty?
+    $player_name = name
+  end
+  
+  puts "Your player name [#{$player_name}]? [y|n]"
   case gets
     when /^[yY]/
-      puts 'The game has started!'
-      sleep(1)
-      
-      my_hand    = jan_ken_po("Jan-ken-po!")
-      enemy_hand = get_enemy_hand
-      
-      if my_hand == enemy_hand
-        # aiko shori
-      end
-      
-      exit
+      puts "Set your player name: #{$player_name}"
+      break
+  end
+end
 
-      if duel
-        hand = [
-          :rock     => 1,
-          :paper    => 2,
-          :scissors => 3
-        ]
-           if my_hand == hand[:rock] && enemy_hand == hand[:paper]     then flag = true
-        elsif my_hand == hand[:paper] && enemy_hand == hand[:scissors] then flag = true
-        elsif my_hand == hand[:scissors] && enemy_hand == hand[:rock]  then flag = true
+sleep(1)
+puts
+puts "If you got [#{getter(:goal)}], it is game clear."
+puts "You have [#{getter(:money)}]."
+puts "You need [#{getter(:bet)}] to play game once."
+sleep(1)
 
-        elsif my_hand == hand[:rock] && enemy_hand == hand[:scissors]  then flag = false
-        elsif my_hand == hand[:paper] && enemy_hand == hand[:rock]     then flag = false
-        elsif my_hand == hand[:scissors] && enemy_hand == hand[:paper] then flag = false
-           end
-        
-        return
-      end
+while true
+  puts
+  puts 'Let the games begin... [y|n]:'
+  case gets
+    when /^[yY]/
+      puts getter(:good)
+      $wallet -= BET
+      break
     else
-      lame
+      puts 'Lame...Lame...Lame...'
+      exit
+  end
+end
+
+while true
+  if duel
+    prize = Random.new.rand(1..10)
+    $wallet += prize
+    
+    sleep(1)
+    puts
+    puts 'Congrats, you won this game!'
+    sleep(1)
+    puts
+    puts "You got [#{prize} #{UNIT}]."
+    
+    if $wallet > 99
+      sleep(1)
+      puts
+      puts '_/_/_/_/_/_/_/_/_/_/'
+      puts 'You are GOD.'
+      exit
+    end
+  else
+    sleep(1)
+    puts
+    puts 'Too bad, you lost this game!'
+    
+    if $wallet < 3 #破産
+      sleep(1)
+      puts
+      puts '_/_/_/_/_/_/_/_/_/_/'
+      puts 'You die.'
+      puts
+      exit
+    end
+  end
+  
+  sleep(1)
+  puts
+  puts '_/_/_/_/_/_/_/_/_/_/'
+  puts "you have [#{getter(:money)}]."
+  puts "[#{getter(:to_goal)}] to game clear."
+  sleep(1)
+  
+  puts "Play more game? #{$player_name}? [y|n]"
+  case gets
+    when /^[yY]/
+      puts getter(:good)
+    when /^[nN]/
+      puts 'Bye-bye!'
+      return
+    else
+      puts 'Lame...Lame...Lame...'
+      exit
   end
 end
