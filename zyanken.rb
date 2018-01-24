@@ -142,7 +142,7 @@ game = Game.new
 
 print "\nようこそzyankenへ❗\nプレイヤー名を入力してください -> "
 name = gets.chop
-game.player_name = name unless name
+game.player_name = name if name
 
 select_mode_msg = "『#{game.player_name}』さんですね❓\nゲームモードを選択してください ->"
 
