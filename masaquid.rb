@@ -184,8 +184,7 @@ while true
       puts 'Bye-bye!'
       return
     else
-      puts 'Lame...Lame...Lame...'
-      exit
+      puts 'Please input [y|n]'
   end
 end
 
