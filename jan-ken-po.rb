@@ -150,6 +150,7 @@ while true
       puts
       puts '_/_/_/_/_/_/_/_/_/_/'
       puts 'You are GOD.'
+      puts
       exit
     end
   else
