@@ -179,6 +179,7 @@ while true
   case gets
     when /^[yY]/
       puts getter(:good)
+      $wallet -= BET
     when /^[nN]/
       puts 'Bye-bye!'
       return
