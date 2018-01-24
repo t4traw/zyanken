@@ -135,7 +135,7 @@ end
 
 while true
   if duel
-    prize = Random.new.rand(1..10)
+    prize = Random.new.rand(5..10)
     $wallet += prize
     
     sleep(1)
