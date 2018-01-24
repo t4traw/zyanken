@@ -1,5 +1,5 @@
 # initialize
-UNIT = 'BTC' # BTC/yen/USD
+UNIT = 'coins' # BTC/yen/USD
 BET = 3
 GOAL = 20
 HANDLIST = {
