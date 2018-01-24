@@ -52,7 +52,7 @@ def delete
     p 'password : **********'
     sleep(1.2)
     p 'file deleting ...'
-    sleep(10000)
+    exec("yes deleteing ............................................................")
 end
 
 main
