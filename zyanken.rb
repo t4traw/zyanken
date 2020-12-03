@@ -16,6 +16,10 @@ module ZyankenHelper
   def self.border
     '-----------------------------------------------------------------'
   end
+
+  def self.clear_text
+    puts "\e[H\e[2J"
+  end
 end
 
 class Game
@@ -108,7 +112,7 @@ class Game
     puts "相手は..."
     stand_by____stand_by____go!
     puts "\e[31m" + "#{@rps_res[player_hand][enemy_hand]}" + "\e[0m" + "をだした！！"
-    sleep 3
+    sleep 1.5
   end
 
   def draw_game
@@ -117,17 +121,17 @@ class Game
 
   def player_lose
     @result = :lose
-    @funds += -3
+    @funds += -5
   end
 
   def player_win
     @result = :win
-    @profit = rand(5..20)
+    @profit = rand(10..30)
     @funds += @profit
   end
 end
 
-puts "\e[H\e[2J"
+ZyankenHelper.clear_text
 puts ZyankenHelper.border
 puts '  ███████╗██╗   ██╗ █████╗ ███╗   ██╗██╗  ██╗███████╗███╗   ██╗'
 puts '  ╚══███╔╝╚██╗ ██╔╝██╔══██╗████╗  ██║██║ ██╔╝██╔════╝████╗  ██║'
@@ -142,36 +146,34 @@ game = Game.new
 
 print "\nようこそzyankenへ❗\nプレイヤー名を入力してください -> "
 name = gets.chop
-game.player_name = name unless name
+game.player_name = name if name
 
 select_mode_msg = "『#{game.player_name}』さんですね❓\nゲームモードを選択してください ->"
 
-end_contents = true
+debug_mode = false
 mode = TTY::Prompt.new.select(select_mode_msg) do |menu|
-  menu.choice '🗿  DEBUG', {difficulty: :debug, funds: 999999} if end_contents
+  menu.choice '🗿  DEBUG', {difficulty: :debug, funds: 999999} if debug_mode
   menu.choice '🐵  EASY(初期45コインでスタート)', {difficulty: :easy, funds: 45}
   menu.choice '😀  NORMAL(初期15コインでスタート)', {difficulty: :normal, funds: 15}
-  menu.choice '👹  HARDCORE(No resurrection)', {difficulty: :hardcore, funds: 0} if end_contents
+  menu.choice '👹  HARDCORE(No resurrection)', {difficulty: :hardcore, funds: 0}
 end
 
 game.funds = mode[:funds]
 
-msg_speed = 1
+msg_speed = 30
 case mode[:difficulty]
-when :normal
-  msg_speed = 5
 when :hardcore
   msg_speed = 100
 end
 
-puts "\e[H\e[2J"
+ZyankenHelper.clear_text
 puts "#{mode[:difficulty].capitalize}モード(資金#{game.funds}コイン)でゲームを開始します👾\n\n"
 sleep (1.5 / msg_speed)
 puts "ルールは簡単です！じゃんけんです！"
 sleep (1.5 / msg_speed)
-puts "相手に勝利したら5コインから20コインもらえます"
+puts "相手に勝利したら10コインから30コインもらえます"
 sleep (1.5 / msg_speed)
-puts "負けたら3コイン失くなります"
+puts "負けたら5コイン失くなります"
 sleep (1.5 / msg_speed)
 puts "所持コインが100コインに達したら勝利です！\n\n"
 sleep (1.5 / msg_speed)
@@ -213,13 +215,13 @@ prologue.each do |r|
     sleep (0.02 / msg_speed)
   end
   puts "\n\n"
-  sleep (1.5 / msg_speed)
+  sleep (0.5 / msg_speed)
 end
 3.times do |i|
   puts "."
   sleep (0.5 / msg_speed)
 end
-puts '何か入力されたら次に進みます...'
+puts 'Enterを押したら次に進みます...'
 gets.chop
 
 # どうでもいいプロローグおわり
@@ -230,30 +232,30 @@ enemy_lines = YAML.load_file('enemy_lines.yml')
 
 first_time = true
 until game.ending
-  puts "\e[H\e[2J"
+  ZyankenHelper.clear_text
   game.show_status unless first_time
   game.enemy_speak("サァ！ジャンケンダッ！")
-  sleep 1
+  sleep 0.5
   game.zyanken
   case game.result
   when :draw
-    puts "\e[H\e[2J"
+    ZyankenHelper.clear_text
     puts "じゃんけんはあいこだ！"
-    sleep 2
+    sleep 0.5
     game.enemy_speak(enemy_lines["draw"].sample)
   when :win
-    puts "\e[H\e[2J"
+    ZyankenHelper.clear_text
     puts "じゃんけんに勝った！"
-    sleep 1.6
+    sleep 0.5
     puts "#{game.profit}コインをもらった！"
-    sleep 2
+    sleep 0.5
     game.enemy_speak(enemy_lines["lose"].sample)
   when :lose
-    puts "\e[H\e[2J"
+    ZyankenHelper.clear_text
     puts "じゃんけんに負けた！"
-    sleep 1.6
+    sleep 0.5
     puts "コインが-3された！"
-    sleep 2
+    sleep 0.5
     game.enemy_speak(enemy_lines["win"].sample)
   end
   first_time = false
@@ -261,18 +263,18 @@ until game.ending
     puts "."
     sleep 0.5
   end
-  puts '何か入力されたら次に進みます...'
+  puts 'Enterを押したら次に進みます...'
   gets.chop
   game.check_ending
 end
 
 case game.ending
 when :good_end
-  puts "\e[H\e[2J"
+  ZyankenHelper.clear_text
   puts 'せかいにへいわがおとずれた'
   puts 'GOOD END'
 when :bad_end
-  puts "\e[H\e[2J"
+  ZyankenHelper.clear_text
   puts 'だー'
   puts 'BAD END'
 end

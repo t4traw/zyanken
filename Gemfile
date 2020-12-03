@@ -6,5 +6,3 @@ git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
 gem "tty"
 gem "pry"
-
-gem 'gosu'
