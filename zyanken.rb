@@ -1,8 +1,10 @@
 require 'tty'
 require 'yaml'
 
+debug_mode = false
+
 module ZyankenHelper
-  def stand_by____stand_by____go!
+  def self.stand_by____stand_by____go!
     5.times do
       %W(\\ | / -).each do |m|
         print "\r#{m}"
@@ -22,7 +24,6 @@ module ZyankenHelper
 end
 
 class Game
-  include ZyankenHelper
   attr_accessor :player_name, :enemy_name, :funds
   attr_reader  :funds, :profit, :result, :ending
 
@@ -109,7 +110,7 @@ class Game
 
   def result_msg(player_hand, enemy_hand)
     puts "相手は..."
-    stand_by____stand_by____go!
+    ZyankenHelper.stand_by____stand_by____go!
     puts "\e[31m" + "#{@rps_res[player_hand][enemy_hand]}" + "\e[0m" + "をだした！！"
     sleep 1.5
   end
@@ -148,10 +149,7 @@ name = gets.chop
 game.player_name = name if name
 
 select_mode_msg = "『#{game.player_name}』さんですね❓\nゲームモードを選択してください ->"
-
-debug_mode = false
 mode = TTY::Prompt.new.select(select_mode_msg) do |menu|
-  menu.choice '🗿  DEBUG', {difficulty: :debug, funds: 999999} if debug_mode
   menu.choice '🐵  EASY(初期45コインでスタート)', {difficulty: :easy, funds: 45}
   menu.choice '😀  NORMAL(初期15コインでスタート)', {difficulty: :normal, funds: 15}
   menu.choice '👹  HARDCORE(No resurrection)', {difficulty: :hardcore, funds: 0}
@@ -176,12 +174,6 @@ puts "負けたら5コイン失くなります"
 sleep (1.5 / msg_speed)
 puts "所持コインが100コインに達したら勝利です！\n\n"
 sleep (1.5 / msg_speed)
-
-
-# ================================================================
-# どうでもいいプロローグ
-# この文章は↓のページの内容をパクりました😉
-# http://www.geocities.jp/shinonomenod/lanoara.html
 
 story = YAML.load_file('story.yml')
 setting = {
