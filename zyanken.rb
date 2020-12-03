@@ -1,6 +1,5 @@
 require 'tty'
 require 'yaml'
-require 'pry'
 
 module ZyankenHelper
   def stand_by____stand_by____go!
