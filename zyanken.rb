@@ -3,7 +3,7 @@ require 'yaml'
 
 debug_mode = false
 
-module ZyankenHelper
+module DispHelper
   def self.stand_by____stand_by____go!
     5.times do
       %W(\\ | / -).each do |m|
@@ -65,9 +65,9 @@ class Game
   end
 
   def show_status
-    puts ZyankenHelper.border
-    puts "#{@player_name}の所持コイン: #{@funds}".center(ZyankenHelper.border.size)
-    puts ZyankenHelper.border
+    puts DispHelper.border
+    puts "#{@player_name}の所持コイン: #{@funds}".center(DispHelper.border.size)
+    puts DispHelper.border
   end
 
   def check_ending
@@ -110,7 +110,7 @@ class Game
 
   def result_msg(player_hand, enemy_hand)
     puts "相手は..."
-    ZyankenHelper.stand_by____stand_by____go!
+    DispHelper.stand_by____stand_by____go!
     puts "\e[31m" + "#{@rps_res[player_hand][enemy_hand]}" + "\e[0m" + "をだした！！"
     sleep 1.5
   end
@@ -131,16 +131,16 @@ class Game
   end
 end
 
-ZyankenHelper.clear_text
-puts ZyankenHelper.border
+DispHelper.clear_text
+puts DispHelper.border
 puts '  ███████╗██╗   ██╗ █████╗ ███╗   ██╗██╗  ██╗███████╗███╗   ██╗'
 puts '  ╚══███╔╝╚██╗ ██╔╝██╔══██╗████╗  ██║██║ ██╔╝██╔════╝████╗  ██║'
 puts '    ███╔╝  ╚████╔╝ ███████║██╔██╗ ██║█████╔╝ █████╗  ██╔██╗ ██║'
 puts '   ███╔╝    ╚██╔╝  ██╔══██║██║╚██╗██║██╔═██╗ ██╔══╝  ██║╚██╗██║'
 puts '  ███████╗   ██║   ██║  ██║██║ ╚████║██║  ██╗███████╗██║ ╚████║'
 puts '  ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝'
-puts 'The greatest triangle relation game'.center(ZyankenHelper.border.size)
-puts ZyankenHelper.border
+puts 'The greatest triangle relation game'.center(DispHelper.border.size)
+puts DispHelper.border
 
 game = Game.new
 
@@ -163,7 +163,7 @@ when :hardcore
   msg_speed = 100
 end
 
-ZyankenHelper.clear_text
+DispHelper.clear_text
 puts "#{mode[:difficulty].capitalize}モード(資金#{game.funds}コイン)でゲームを開始します👾\n\n"
 sleep (1.5 / msg_speed)
 puts "ルールは簡単です！じゃんけんです！"
@@ -223,26 +223,26 @@ enemy_lines = YAML.load_file('enemy_lines.yml')
 
 first_time = true
 until game.ending
-  ZyankenHelper.clear_text
+  DispHelper.clear_text
   game.show_status unless first_time
   game.enemy_speak("サァ！ジャンケンダッ！")
   sleep 0.5
   game.zyanken
   case game.result
   when :draw
-    ZyankenHelper.clear_text
+    DispHelper.clear_text
     puts "じゃんけんはあいこだ！"
     sleep 0.5
     game.enemy_speak(enemy_lines["draw"].sample)
   when :win
-    ZyankenHelper.clear_text
+    DispHelper.clear_text
     puts "じゃんけんに勝った！"
     sleep 0.5
     puts "#{game.profit}コインをもらった！"
     sleep 0.5
     game.enemy_speak(enemy_lines["lose"].sample)
   when :lose
-    ZyankenHelper.clear_text
+    DispHelper.clear_text
     puts "じゃんけんに負けた！"
     sleep 0.5
     puts "コインが-3された！"
@@ -261,11 +261,11 @@ end
 
 case game.ending
 when :good_end
-  ZyankenHelper.clear_text
+  DispHelper.clear_text
   puts 'せかいにへいわがおとずれた'
   puts 'GOOD END'
 when :bad_end
-  ZyankenHelper.clear_text
+  DispHelper.clear_text
   puts 'だー'
   puts 'BAD END'
 end
